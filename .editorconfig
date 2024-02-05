@@ -1,0 +1,43 @@
+[*]
+indent_style = space
+indent_size = 2
+tab_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[{.babelrc, .prettierrc, .stylelintrc, .eslintrc, jest.config, *.json, *.js, *.js.map, *.ts, *.tsx, *.jsb3, *.jsb2, *.bowerrc, *.graphqlconfig}]
+indent_style = space
+indent_size = 2
+
+[.editorconfig]
+indent_style = space
+indent_size = 4
+
+[*.less]
+indent_style = space
+indent_size = 2
+
+[{tsconfig.lib.json, tsconfig.spec.json, tsconfig.app.json, tsconfig.json, tsconfig.e2e.json}]
+indent_style = space
+indent_size = 2
+
+[*.ejs]
+indent_style = space
+indent_size = 4
+
+[{.analysis_options, *.yml, *.yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# Minified JavaScript files shouldn't be changed
+[**.min.js]
+indent_style = space
+insert_final_newline = false
+
+[*.gitkeep]
+insert_final_newline = false
