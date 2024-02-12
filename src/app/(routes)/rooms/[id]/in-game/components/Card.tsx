@@ -1,27 +1,30 @@
 'use client';
 
-import { ICard } from '@/types/cards';
+import { CARDS_TEST } from '@/constants/cards';
+import { IAttribute, ICard } from '@/types/card';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface CardProps {
     card: ICard;
+    onSelectAttribute: (attribute: IAttribute) => void;
 }
 
-export const Card = ({ card }: CardProps) => {
-    const [rotation, setRotation] = useState({ x: 0, y: 0 });
-
-    useEffect(() => {
-        const handleMouseMove = (event: MouseEvent) => {
+export const Card = ({ card, onSelectAttribute }: CardProps) => {
+    const cardRef = useRef<HTMLDivElement | null>(null);
+    const handleMouseMove = (event: MouseEvent) => {
+        if (cardRef.current) {
             const { clientX, clientY } = event;
             const { left, top, width, height } = document.body.getBoundingClientRect();
 
             const x = (clientX - left - width / 2) / (width / 2);
             const y = -(clientY - top - height / 2) / (height / 2);
 
-            setRotation({ x, y });
-        };
+            cardRef.current.style.transform = `rotateX(${y * 10}deg) rotateY(${x * 10}deg)`;
+        }
+    };
 
+    useEffect(() => {
         document.addEventListener('mousemove', handleMouseMove);
 
         return () => {
@@ -31,9 +34,11 @@ export const Card = ({ card }: CardProps) => {
 
     return (
         <>
-            <div className='fixed left-0 top-0 h-screen w-1/2 overflow-hidden'>
+            <div className='fixed left-0 top-0 -z-10 h-screen w-1/2 overflow-hidden'>
                 <Image
-                    src={card.image_src}
+                    src={card.image.url}
+                    blurDataURL={card.image.blurhash}
+                    placeholder='blur'
                     width={380}
                     height={320}
                     objectFit='fill'
@@ -45,16 +50,18 @@ export const Card = ({ card }: CardProps) => {
             </div>
 
             <div
+                ref={cardRef}
                 className='w-[380px] overflow-hidden rounded-2xl border-4 border-secondary-900 bg-secondary-900 shadow-lg'
                 style={{
-                    transform: `rotateX(${rotation.y * 10}deg) rotateY(${rotation.x * 10}deg)`,
                     transformStyle: 'preserve-3d'
                 }}
             >
                 <div className='grid h-[500px] justify-between'>
                     <div className='relative h-[320px] bg-secondary-500'>
                         <Image
-                            src={card.image_src}
+                            src={card.image.url}
+                            blurDataURL={card.image.blurhash}
+                            placeholder='blur'
                             width={380}
                             height={320}
                             objectFit='fill'
@@ -65,14 +72,15 @@ export const Card = ({ card }: CardProps) => {
                         <div className='absolute bottom-0 left-0 h-full w-full bg-[linear-gradient(0deg,_rgba(34,29,30,1)_10%,rgba(34,29,30,0)_100%)]' />
                     </div>
                     <ul className='mt-auto grid gap-2 p-4'>
-                        {card.attributes.map((attribute) => (
+                        {card?.attrs?.map((attribute) => (
                             <li
-                                key={attribute.id}
+                                key={attribute.attr.slug}
                                 className='group flex cursor-pointer items-center justify-between gap-4 transition-all hover:font-semibold focus:font-semibold'
                                 tabIndex={1}
+                                onClick={() => onSelectAttribute(attribute)}
                             >
                                 <span className='whitespace-nowrap break-keep text-secondary-200 group-hover:text-primary-500'>
-                                    {attribute.name}
+                                    {attribute.attr.title}
                                 </span>
                                 <div className='h-[1px] w-full border border-dashed border-secondary-700' />
                                 <span className='font-bold text-secondary-200 group-hover:text-primary-500 group-focus:text-primary-500'>

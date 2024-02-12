@@ -28,7 +28,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
         socket.join(props.roomId);
         socket.data.roomId = props.roomId;
 
-        global.setState({ ...global, users: newUsers });
+        global.updateUsers(newUsers);
 
         io.in(props.roomId).emit('users:update', getUsersFilteredByRoom(newUsers, props.roomId));
     };

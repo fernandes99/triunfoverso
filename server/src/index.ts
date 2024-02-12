@@ -33,10 +33,7 @@ const onConnection = (socket: Socket) => {
         const users = global.getState().users;
         const usersFiltered = users.filter((user) => user.id !== socket.id);
 
-        global.setState({
-            ...global,
-            users: usersFiltered
-        });
+        global.updateUsers(usersFiltered);
 
         io.in(roomId).emit('users:update', usersFiltered);
     });

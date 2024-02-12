@@ -4,5 +4,6 @@ export interface ITurn {
     currentUser: IUser;
     roomId: string;
     round: number;
-    title: string;
+    history: string[];
+    state: 'initial' | 'finished';
 }

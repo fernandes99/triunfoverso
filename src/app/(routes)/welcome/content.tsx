@@ -13,13 +13,12 @@ export const WelcomeContent = () => {
     const router = useRouter();
     const [creatingRoom, setCreatingRoom] = useState(false);
     const [roomId, setRoomId] = useState('');
-    const [userName, setUserName] = useState(storage.get('username') || '');
+    const [userName, setUserName] = useState('');
 
     const createRoom = () => {
         const randomString = getRandomString();
 
         storage.set('username', userName || `Anônimo${Math.random().toFixed(5)}`);
-        socket.emit('connect_room', { roomId, userName });
         router.push(`/rooms/${randomString}`);
         setRoomId(randomString);
     };
@@ -32,7 +31,6 @@ export const WelcomeContent = () => {
         }
 
         storage.set('username', userName || `Anônimo${Math.random().toFixed(5)}`);
-        socket.emit('connect_room', { roomId, userName });
         router.push(`/rooms/${roomId}`);
     };
 

@@ -1,10 +1,9 @@
-import { CARDS } from '../constants/cards';
+import { ICard } from './card';
 
 export interface IUser {
     id: string;
     name: string;
     roomId: string;
     isReady: boolean;
-    cards: typeof CARDS;
-    graveyard: typeof CARDS;
+    cards: ICard[];
 }

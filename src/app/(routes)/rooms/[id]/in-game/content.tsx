@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TbCards } from 'react-icons/tb';
 import { GAME } from '@/constants/game';
 import { Card } from './components/Card';
@@ -9,6 +9,7 @@ import { socket } from '@/utils/socket';
 import { IUser } from '@/types/user';
 import { ITurn } from '@/types/turn';
 import storage from '@/utils/scripts/storage';
+import { IAttribute } from '@/types/card';
 
 interface InGameContentProps {
     roomId: string;
@@ -18,11 +19,15 @@ export default function InGameContent({ roomId }: InGameContentProps) {
     const [users, setUsers] = useState<IUser[]>([]);
     const [turn, setTurn] = useState<ITurn | null>(null);
 
-    const currentUser = users.find((user) => user.id === socket.id);
+    const selfUser = users.find((user) => user.id === socket.id);
 
-    console.log('CurrentUser', currentUser);
-    console.log('Users', users);
-    console.log('Turn', turn);
+    const onSelectAttribute = (attribute: IAttribute) => {
+        socket.emit('turn:on-select-attribute', { turn, attribute });
+    };
+
+    const passTurn = useCallback(() => {
+        socket.emit('turn:on-pass', { turn });
+    }, [turn]);
 
     useEffect(() => {
         const onUpdateUser = setUsers;
@@ -39,36 +44,68 @@ export default function InGameContent({ roomId }: InGameContentProps) {
         };
     }, [roomId]);
 
+    useEffect(() => {
+        if (turn?.state === 'finished' && socket.id === turn.currentUser.id) {
+            setTimeout(passTurn, 5000);
+        }
+    }, [turn, passTurn]);
+
+    console.log('Users', users);
+    console.log('Turn', turn);
+
     return (
         <div className='container mx-auto flex h-screen items-center justify-center lg:w-[1200px]'>
-            <div className='flex w-full justify-between'>
-                {GAME.users.map((user, index) => {
-                    const isEnemy = index !== 0;
-                    const currentCard = user.cards[isEnemy ? 1 : 0];
+            <div className='relative flex w-full justify-between'>
+                {users.map((user, index) => {
+                    const isFirstUser = index === 0;
+                    const isSelfUser = user.id === selfUser?.id;
+                    const currentCard = user?.cards[0];
 
                     return (
                         <div key={user.id}>
                             <div
-                                className={`flex flex-col ${isEnemy ? 'items-end' : 'items-start'}`}
+                                className={`flex flex-col ${isFirstUser ? 'items-start' : 'items-end'}`}
                             >
                                 <span className='text-2xl font-semibold leading-10 text-secondary-200'>
                                     {user.name}
                                 </span>
                                 <div
-                                    className={`mb-4 flex items-center gap-2 font-semibold ${isEnemy ? 'flex-row-reverse' : 'flex-row'}`}
+                                    className={`mb-4 flex items-center gap-2 font-semibold ${isFirstUser ? 'flex-row' : 'flex-row-reverse'}`}
                                 >
                                     <TbCards
                                         className='rounded-full bg-primary-500 p-[3px] text-secondary-700'
                                         size={24}
                                     />
-                                    <span className='text-primary-500'>16 cartas</span>
+                                    <span className='text-primary-500'>
+                                        {user.cards.length} cartas
+                                    </span>
                                 </div>
                             </div>
 
-                            {isEnemy ? <EmptyCard /> : <Card card={currentCard} />}
+                            {isSelfUser || turn?.state === 'finished' ? (
+                                <Card card={currentCard!} onSelectAttribute={onSelectAttribute} />
+                            ) : (
+                                <EmptyCard />
+                            )}
                         </div>
                     );
                 })}
+
+                <div className='absolute -top-6 left-1/2 -translate-x-1/2'>
+                    <ul className='flex flex-col-reverse items-center justify-center'>
+                        {turn?.history.map((action, index) => (
+                            <li
+                                key={index}
+                                className={`${index === 0 ? 'text-lg font-semibold text-secondary-200' : 'font-normal text-secondary-200/50'}
+                                    ${index === 2 && 'font-normal text-secondary-200/20'}
+                                `}
+                            >
+                                {action}
+                            </li>
+                        ))}
+                    </ul>
+                    {turn?.state === 'finished' && <span>LOADING...</span>}
+                </div>
             </div>
         </div>
     );

@@ -24,7 +24,7 @@ export const registerUserHandlers = (io: Server, socket: Socket) => {
             return user;
         });
 
-        global.setState({ ...global, users: newUsers });
+        global.updateUsers(newUsers);
 
         io.in(roomId).emit('users:update', getUsersFilteredByRoom(newUsers, roomId));
     };

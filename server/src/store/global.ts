@@ -6,7 +6,8 @@ export class Global {
 
     private constructor() {
         this.state = {
-            users: []
+            users: [],
+            turn: null
         };
     }
 
@@ -27,5 +28,9 @@ export class Global {
 
     public updateUsers(newState: IGlobal['users']) {
         this.state.users = newState;
+    }
+
+    public updateTurn(newState: IGlobal['turn']) {
+        this.state.turn = newState;
     }
 }

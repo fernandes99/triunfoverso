@@ -20,26 +20,73 @@ export const CARDS = [
 
 export const CARDS_TEST = [
     {
-        id: 'ah1pEbudQfWIT1683rwKqQ',
-        title: 'Game of Thrones',
-        slug: 'game-of-thrones',
+        id: 'BX6VEcA3SOGUPlDHj7tixQ',
+        title: 'Vikings',
+        slug: 'vikings',
         attrs: [
             {
-                value: 73,
+                value: 89,
                 attr: {
                     slug: 'episodios',
                     title: 'Episódios'
                 }
             },
             {
-                value: 8,
+                value: 6,
                 attr: {
                     slug: 'temporadas',
                     title: 'Temporadas'
                 }
             },
             {
-                value: 89,
+                value: 93,
+                attr: {
+                    slug: 'nota-dos-criticos',
+                    title: 'Nota dos críticos'
+                }
+            },
+            {
+                value: 4.7,
+                attr: {
+                    slug: 'nota-do-publico',
+                    title: 'Nota do público'
+                }
+            },
+            {
+                value: 33,
+                attr: {
+                    slug: 'premiacoes',
+                    title: 'Premiações'
+                }
+            }
+        ],
+        image: {
+            blurhash: 'L56a*Us:01M{s:t79ZWBxuayxaWB',
+            title: null,
+            url: 'https://www.datocms-assets.com/119505/1707163711-bg-series-vikings-03022024.png'
+        }
+    },
+    {
+        id: 'VYxiyXILSvmTsfoEhsplmg',
+        title: 'Breaking Bad',
+        slug: 'breaking-bad',
+        attrs: [
+            {
+                value: 62,
+                attr: {
+                    slug: 'episodios',
+                    title: 'Episódios'
+                }
+            },
+            {
+                value: 5,
+                attr: {
+                    slug: 'temporadas',
+                    title: 'Temporadas'
+                }
+            },
+            {
+                value: 96,
                 attr: {
                     slug: 'nota-dos-criticos',
                     title: 'Nota dos críticos'
@@ -53,7 +100,7 @@ export const CARDS_TEST = [
                 }
             },
             {
-                value: 272,
+                value: 92,
                 attr: {
                     slug: 'premiacoes',
                     title: 'Premiações'
@@ -61,9 +108,9 @@ export const CARDS_TEST = [
             }
         ],
         image: {
-            blurhash: 'L17-Wo?cBC00^*V@Ip%M00ofDi_3',
+            blurhash: 'LfH,wN$|oJj@}:t3azR,R,WDR,R,',
             title: null,
-            url: 'https://www.datocms-assets.com/119505/1707060805-bg-series-game-of-thrones-03022024.png'
+            url: 'https://www.datocms-assets.com/119505/1707057592-bg-series-breaking-bad-03022024.png'
         }
     },
     {
@@ -114,26 +161,26 @@ export const CARDS_TEST = [
         }
     },
     {
-        id: 'VYxiyXILSvmTsfoEhsplmg',
-        title: 'Breaking Bad',
-        slug: 'breaking-bad',
+        id: 'ah1pEbudQfWIT1683rwKqQ',
+        title: 'Game of Thrones',
+        slug: 'game-of-thrones',
         attrs: [
             {
-                value: 62,
+                value: 73,
                 attr: {
                     slug: 'episodios',
                     title: 'Episódios'
                 }
             },
             {
-                value: 5,
+                value: 8,
                 attr: {
                     slug: 'temporadas',
                     title: 'Temporadas'
                 }
             },
             {
-                value: 96,
+                value: 89,
                 attr: {
                     slug: 'nota-dos-criticos',
                     title: 'Nota dos críticos'
@@ -147,7 +194,7 @@ export const CARDS_TEST = [
                 }
             },
             {
-                value: 92,
+                value: 272,
                 attr: {
                     slug: 'premiacoes',
                     title: 'Premiações'
@@ -155,9 +202,9 @@ export const CARDS_TEST = [
             }
         ],
         image: {
-            blurhash: 'LfH,wN$|oJj@}:t3azR,R,WDR,R,',
+            blurhash: 'L17-Wo?cBC00^*V@Ip%M00ofDi_3',
             title: null,
-            url: 'https://www.datocms-assets.com/119505/1707057592-bg-series-breaking-bad-03022024.png'
+            url: 'https://www.datocms-assets.com/119505/1707060805-bg-series-game-of-thrones-03022024.png'
         }
     }
 ];
