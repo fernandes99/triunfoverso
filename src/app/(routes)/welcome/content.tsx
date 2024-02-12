@@ -1,10 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { socket } from '@/utils/socket';
 import { getRandomString } from '@/utils/scripts/string';
 import storage from '@/utils/scripts/storage';
 import Button from '@/components/Button';
