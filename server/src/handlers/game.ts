@@ -5,20 +5,10 @@ import { getUsersFilteredByRoom, shuffle, updateTurnHistory } from '../utils/gen
 import { ITurn } from '../types/turn';
 import { CARDS } from '../constants/cards';
 import { IUser } from '../types/user';
-import { IAttribute } from '../types/card';
 
 interface IOnStartGame {
     roomId: string;
     userName: string;
-}
-
-interface IOnTurnPass {
-    turn: ITurn;
-}
-
-interface IOnSelectAttribute {
-    turn: ITurn;
-    attribute: IAttribute;
 }
 
 export const registerGameHandlers = (io: Server, socket: Socket) => {
@@ -54,52 +44,5 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
         io.in(roomId).emit('users:update', userFiltered);
     };
 
-    const onTurnPass = (props: IOnTurnPass) => {
-        const turn = global.getState().turn;
-        const users = global.getState().users;
-        const userFiltered = getUsersFilteredByRoom(users, props.turn.roomId);
-        const currentUser = userFiltered[(turn?.round! + 1) % 2];
-        const turnUpdated = {
-            ...turn,
-            currentUser: currentUser,
-            round: turn?.round! + 1,
-            history: updateTurnHistory(`Vez de ${currentUser.name}`, turn?.history!),
-            state: 'initial'
-        } as ITurn;
-
-        io.in(props.turn.roomId).emit('turn:update', turnUpdated);
-    };
-
-    const onSelectAttribute = (props: IOnSelectAttribute) => {
-        const { users, turn } = global.getState();
-        const userFiltered = getUsersFilteredByRoom(users, turn?.roomId!);
-        const user = userFiltered.find((user) => user.id === socket.id);
-        const enemy = userFiltered.find((user) => user.id !== socket.id);
-        const attributesEnemy = enemy?.cards[0].attrs.find(
-            (attr) => attr.attr.slug === props.attribute.attr.slug
-        );
-
-        const turnUpdated = {
-            ...props.turn,
-            state: 'finished',
-            history: updateTurnHistory(
-                props.attribute.value >= attributesEnemy?.value!
-                    ? `${user?.name} ganhou a rodada!`
-                    : `${enemy?.name} ganhou a rodada!`,
-                turn?.history!
-            ),
-            title:
-                props.attribute.value >= attributesEnemy?.value!
-                    ? `${user?.name} ganhou a rodada!`
-                    : `${enemy?.name} ganhou a rodada!`
-        } as ITurn;
-
-        global.setState({ ...global, users, turn: turnUpdated });
-
-        io.in(props.turn.roomId).emit('turn:update', turnUpdated);
-    };
-
     socket.on('game:on-start', onStartGame);
-    socket.on('turn:on-pass', onTurnPass);
-    socket.on('turn:on-select-attribute', onSelectAttribute);
 };

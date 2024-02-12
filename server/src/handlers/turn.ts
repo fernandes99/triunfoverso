@@ -1,7 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { Global } from '../store/global';
 
-import { getUsersFilteredByRoom, shuffle } from '../utils/general';
+import { getUsersFilteredByRoom, shuffle, updateTurnHistory } from '../utils/general';
 import { ITurn } from '../types/turn';
 import { IAttribute } from '../types/card';
 
@@ -14,7 +14,7 @@ interface IOnSelectAttribute {
     attribute: IAttribute;
 }
 
-export const registerGameHandlers = (io: Server, socket: Socket) => {
+export const registerTurnHandlers = (io: Server, socket: Socket) => {
     const global = Global.getInstance();
 
     const onTurnPass = (props: IOnTurnPass) => {
@@ -26,11 +26,33 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
             ...turn,
             currentUser: currentUser,
             round: turn?.round! + 1,
-            title: `Vez de ${currentUser.name}`,
-            state: 'initial'
+            history: updateTurnHistory(`Vez de ${currentUser.name}`, turn?.history!),
+            state: 'initial',
+            result: null
         } as ITurn;
 
+        const usersUpdated = users.map((user) => {
+            if (user.id === turn?.result?.winner?.id) {
+                user.cards.shift();
+                return user;
+            }
+
+            if (user.id === turn?.result?.loser?.id) {
+                user.cards = [...user.cards, user.cards[0]];
+                user.cards.shift();
+                return user;
+            }
+
+            return user;
+        });
+
+        global.setState({ ...global, users: usersUpdated, turn: turnUpdated });
+
         io.in(props.turn.roomId).emit('turn:update', turnUpdated);
+        io.in(props.turn.roomId).emit(
+            'users:update',
+            getUsersFilteredByRoom(usersUpdated, props.turn.roomId)
+        );
     };
 
     const onSelectAttribute = (props: IOnSelectAttribute) => {
@@ -41,10 +63,17 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
         const attributesEnemy = enemy?.cards[0].attrs.find(
             (attr) => attr.attr.slug === props.attribute.attr.slug
         );
+        const winner = props.attribute.value >= attributesEnemy?.value! ? user : enemy;
+        const loser = props.attribute.value >= attributesEnemy?.value! ? enemy : user;
 
         const turnUpdated = {
             ...props.turn,
             state: 'finished',
+            result: {
+                winner,
+                loser
+            },
+            history: updateTurnHistory(`${winner?.name} ganhou a rodada!`, turn?.history!),
             title:
                 props.attribute.value >= attributesEnemy?.value!
                     ? `${user?.name} ganhou a rodada!`

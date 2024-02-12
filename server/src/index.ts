@@ -7,6 +7,7 @@ import { Global } from './store/global';
 import { registerRoomHandlers } from './handlers/room';
 import { registerUserHandlers } from './handlers/user';
 import { registerGameHandlers } from './handlers/game';
+import { registerTurnHandlers } from './handlers/turn';
 
 const app = express().use(cors());
 const global = Global.getInstance();
@@ -25,6 +26,7 @@ const onConnection = (socket: Socket) => {
     registerRoomHandlers(io, socket);
     registerUserHandlers(io, socket);
     registerGameHandlers(io, socket);
+    registerTurnHandlers(io, socket);
 
     socket.on('disconnect', () => {
         console.log('User Disconnected: ', socket.id);

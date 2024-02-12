@@ -104,7 +104,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
                             </li>
                         ))}
                     </ul>
-                    {turn?.state === 'finished' && <span>LOADING...</span>}
+                    {turn?.state === 'finished' && <span>Carregando...</span>}
                 </div>
             </div>
         </div>

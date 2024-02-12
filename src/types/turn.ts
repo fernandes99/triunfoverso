@@ -5,5 +5,5 @@ export interface ITurn {
     roomId: string;
     round: number;
     history: string[];
-    state: 'initial' | 'finished';
+    state: 'initial' | 'in-dispute' | 'finished';
 }

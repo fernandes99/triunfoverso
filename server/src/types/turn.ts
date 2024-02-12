@@ -5,5 +5,11 @@ export interface ITurn {
     roomId: string;
     round: number;
     history: string[];
-    state: 'initial' | 'finished';
+    result: ITurnResult | null;
+    state: 'initial' | 'in-dispute' | 'finished';
+}
+
+interface ITurnResult {
+    winner: IUser;
+    loser: IUser;
 }
