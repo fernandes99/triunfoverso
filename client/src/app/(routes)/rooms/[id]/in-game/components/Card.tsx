@@ -1,6 +1,5 @@
 'use client';
 
-import { CARDS_TEST } from '@/constants/cards';
 import { IAttribute, ICard } from '@/types/card';
 import { ITurn } from '@/types/turn';
 import Image from 'next/image';
@@ -68,11 +67,20 @@ export const Card = ({ card, turn, onSelectAttribute }: CardProps) => {
                             height={320}
                             objectFit='fill'
                             quality={100}
-                            alt='Dr House'
+                            alt={card.title}
                             className='h-80 object-cover opacity-75'
                         />
                         <div className='absolute bottom-0 left-0 h-full w-full bg-[linear-gradient(0deg,_rgba(34,29,30,1)_10%,rgba(34,29,30,0)_100%)]' />
+                        <Image
+                            src={card.logo.url}
+                            width={card.logo.width}
+                            height={card.logo.height}
+                            quality={100}
+                            alt={card.title}
+                            className='absolute bottom-0 right-1/2 w-3/5 translate-x-1/2'
+                        />
                     </div>
+
                     <ul className='mt-auto grid gap-2 p-4'>
                         {card?.attrs?.map((attribute) => (
                             <li

@@ -7,6 +7,11 @@ export interface ICard {
         blurhash: string;
         url: string;
     };
+    logo: {
+        url: string;
+        width: number;
+        height: number;
+    };
 }
 
 export interface IAttribute {

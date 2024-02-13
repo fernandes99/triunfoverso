@@ -1,9 +1,9 @@
-import { CARDS_TEST } from '@/constants/cards';
+import { ICard } from './card';
 
 export interface IUser {
     id: string;
     name: string;
     roomId: string;
-    cards: typeof CARDS_TEST;
+    cards: ICard[];
     isReady: boolean;
 }

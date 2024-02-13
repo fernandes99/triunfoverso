@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { TbCards } from 'react-icons/tb';
-import { GAME } from '@/constants/game';
 import { Card } from './components/Card';
 import { EmptyCard } from './components/EmptyCard';
 import { socket } from '@/utils/socket';
