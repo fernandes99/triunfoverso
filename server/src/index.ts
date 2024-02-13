@@ -9,6 +9,7 @@ import { registerUserHandlers } from './handlers/user';
 import { registerGameHandlers } from './handlers/game';
 import { registerTurnHandlers } from './handlers/turn';
 
+const port = process.env.PORT || 8000;
 const app = express().use(cors());
 const global = Global.getInstance();
 const server = http.createServer(app);
@@ -48,6 +49,6 @@ app.get('/', (_, res) => {
     res.send('Olá, mundo!');
 });
 
-server.listen(8000, () => {
-    console.log('Servidor rodando na porta 8000');
+server.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
 });
