@@ -43,6 +43,11 @@ const onConnection = (socket: Socket) => {
 
 io.on('connection', onConnection);
 
+app.get('/', (_, res) => {
+    console.log('Acesso à rota "/"');
+    res.send('Olá, mundo!');
+});
+
 server.listen(8000, () => {
     console.log('Servidor rodando na porta 8000');
 });
