@@ -37,7 +37,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
 
         socket.emit('game:on-start', {
             roomId,
-            userName: storage.get('username') || `Anônimo${Math.random().toFixed(5)}`
+            userName: storage.get('username') || `Anônimo${(Math.random() * 1000).toFixed(0)}`
         });
 
         return () => {

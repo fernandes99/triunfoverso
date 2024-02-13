@@ -17,7 +17,7 @@ export const WelcomeContent = () => {
     const createRoom = () => {
         const randomString = getRandomString();
 
-        storage.set('username', userName || `Anônimo${Math.random().toFixed(5)}`);
+        storage.set('username', userName || `Anônimo${(Math.random() * 1000).toFixed(0)}`);
         router.push(`/rooms/${randomString}`);
         setRoomId(randomString);
     };
@@ -29,7 +29,7 @@ export const WelcomeContent = () => {
             });
         }
 
-        storage.set('username', userName || `Anônimo${Math.random().toFixed(5)}`);
+        storage.set('username', userName || `Anônimo${(Math.random() * 1000).toFixed(0)}`);
         router.push(`/rooms/${roomId}`);
     };
 
@@ -39,7 +39,7 @@ export const WelcomeContent = () => {
 
     return (
         <div className='container mx-auto flex h-screen items-center justify-center'>
-            <div className='flex flex-col items-center justify-center rounded-xl bg-white p-12'>
+            <div className='relative flex flex-col items-center justify-center rounded-xl bg-white p-12'>
                 <span>Bem vindo ao</span>
                 <div className='mb-6 flex'>
                     <span className='text-2xl font-bold'>Triunfo</span>

@@ -1,6 +1,8 @@
 'use client';
 
 import Button from '@/components/Button';
+import Select from 'react-select';
+import { LuCopy, LuArrowLeft } from 'react-icons/lu';
 import { IUser } from '@/types/user';
 import useCopyToClipboard from '@/utils/hooks/useClipboard';
 import storage from '@/utils/scripts/storage';
@@ -8,7 +10,12 @@ import { socket } from '@/utils/socket';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { LuCopy } from 'react-icons/lu';
+
+const options = [
+    { value: 'series', label: 'Séries' },
+    { value: 'animes', label: 'Animes' },
+    { value: 'games', label: 'Jogos' }
+];
 
 interface WelcomeContentProps {
     roomId: string;
@@ -19,6 +26,10 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
     const [connectedUsers, setConnectedUsers] = useState<IUser[]>([]);
     const [isReady, setIsReady] = useState(false);
     const [, copyToClipboard] = useCopyToClipboard('', 3000);
+
+    const goToHome = () => {
+        router.push('/');
+    };
 
     const copyRoomId = () => {
         copyToClipboard(roomId);
@@ -53,7 +64,7 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
 
         socket.emit('room:connect', {
             roomId,
-            userName: storage.get('username') || `Anônimo${Math.random().toFixed(5)}`
+            userName: storage.get('username') || `Anônimo${(Math.random() * 1000).toFixed(0)}`
         });
 
         return () => {
@@ -63,14 +74,36 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
         };
     }, [roomId]);
 
-    console.log('Connected Users', connectedUsers);
-
     return (
         <div className='container mx-auto flex h-screen items-center justify-center'>
             <div className='flex flex-col rounded-xl bg-white p-12'>
-                <div className='mb-6 flex'>
-                    <span className='text-2xl font-bold'>Triunfo</span>
-                    <span className='text-2xl font-bold text-primary-500'>Verso</span>
+                <button
+                    onClick={goToHome}
+                    className='-ml-2 -mt-4 mb-1 flex w-fit items-center gap-1 rounded-md px-2 py-1 text-sm text-neutral-500 transition-all hover:bg-neutral-100 hover:text-neutral-700'
+                >
+                    <LuArrowLeft />
+                    <span>voltar</span>
+                </button>
+                <div className='mb-6 flex items-center justify-between'>
+                    <div className='flex'>
+                        <span className='text-2xl font-bold'>Triunfo</span>
+                        <span className='text-2xl font-bold text-primary-500'>Verso</span>
+                    </div>
+                    <div className='flex flex-col text-sm'>
+                        <span className='z-10 -mb-2 ml-1 w-fit rounded-sm bg-white px-1 text-xs font-medium text-neutral-500'>
+                            Tema:
+                        </span>
+                        <Select
+                            value={options[0]}
+                            options={options}
+                            placeholder='Temas'
+                            classNames={{
+                                control: () => '!min-h-[32px] !cursor-pointer',
+                                valueContainer: () => 'h-[32px]',
+                                indicatorsContainer: () => 'h-[32px]'
+                            }}
+                        />
+                    </div>
                 </div>
                 <div className='flex w-96 flex-col gap-2'>
                     <div className='flex justify-between gap-2'>
@@ -91,11 +124,11 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
                             <li className='flex items-center justify-between gap-2' key={user.id}>
                                 <span>{user.name}</span>
                                 {user.isReady ? (
-                                    <span className='rounded-md border border-green-600 px-2 py-1 text-sm font-medium text-green-600'>
+                                    <span className='rounded-md border border-green-600 px-2 py-1 text-xs font-medium text-green-600'>
                                         Pronto
                                     </span>
                                 ) : (
-                                    <span className='rounded-md border border-red-600 px-2 py-1 text-sm font-medium text-red-600'>
+                                    <span className='rounded-md border border-red-600 px-2 py-1 text-xs font-medium text-red-600'>
                                         Não está pronto
                                     </span>
                                 )}
