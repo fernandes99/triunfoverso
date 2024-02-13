@@ -1,5 +1,7 @@
 # Triunfoverso
 
+https://triunfoverso.vercel.app/rooms/03jtk
+
 ## 🚀 Começando
 Estas instruções fornecerão as diretrizes para obter uma cópia do projeto em execução em sua máquina local, para fins de desenvolvimento e teste. O projeto é composto pelo backend, localizado na pasta "server", e pelo frontend, localizado na pasta "client". As instruções detalhadas sobre a estrutura serão apresentadas nos próximos passos.
 
