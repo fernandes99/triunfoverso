@@ -51,7 +51,7 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
         socket.on('disconnect', onDisconnected);
         socket.on('users:update', onUpdateUser);
 
-        socket.emit('room:connect', { roomId, userName: storage.get('username') });
+        socket.emit('room:connect', { roomId, userName: storage.get('username') ||  `Anônimo${Math.random().toFixed(5)}` });
 
         return () => {
             socket.off('connect', onConnected);

@@ -36,7 +36,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
         socket.on('users:update', onUpdateUser);
         socket.on('turn:update', onUpdateTurn);
 
-        socket.emit('game:on-start', { roomId, userName: storage.get('username') });
+        socket.emit('game:on-start', { roomId, userName: storage.get('username') ||  `Anônimo${Math.random().toFixed(5)}` });
 
         return () => {
             socket.off('users:update', onUpdateUser);
