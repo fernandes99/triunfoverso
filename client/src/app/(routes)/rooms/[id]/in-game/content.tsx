@@ -31,9 +31,13 @@ export default function InGameContent({ roomId }: InGameContentProps) {
     useEffect(() => {
         const onUpdateUser = setUsers;
         const onUpdateTurn = setTurn;
+        const onYouWin = () => alert('Parabéns, você ganhou!');
+        const onYouLose = () => alert('Vish, tu perdeu irmão!');
 
         socket.on('users:update', onUpdateUser);
         socket.on('turn:update', onUpdateTurn);
+        socket.on('game:you-lose', onYouLose);
+        socket.on('game:you-win', onYouWin);
 
         socket.emit('game:on-start', {
             roomId,
@@ -43,6 +47,8 @@ export default function InGameContent({ roomId }: InGameContentProps) {
         return () => {
             socket.off('users:update', onUpdateUser);
             socket.off('turn:update', onUpdateTurn);
+            socket.off('game:you-lose', onYouLose);
+            socket.off('game:you-win', onYouWin);
         };
     }, [roomId]);
 
