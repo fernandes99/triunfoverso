@@ -5,6 +5,7 @@ import { IUser } from '@/types/user';
 import useCopyToClipboard from '@/utils/hooks/useClipboard';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { LuCopy } from 'react-icons/lu';
@@ -14,6 +15,7 @@ interface WelcomeContentProps {
 }
 
 export default function RoomContent({ roomId }: WelcomeContentProps) {
+    const router = useRouter();
     const [connectedUsers, setConnectedUsers] = useState<IUser[]>([]);
     const [isReady, setIsReady] = useState(false);
     const [, copyToClipboard] = useCopyToClipboard('', 3000);
@@ -33,6 +35,12 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
         socket.emit('user:on-ready', { roomId, isReady: !isReady });
         setIsReady((prev) => !prev);
     };
+
+    useMemo(() => {
+        if (connectedUsers.length > 1 && connectedUsers.every(user => user.isReady)) {
+            router.push(`/rooms/${roomId}/in-game`);
+        }
+    }, [connectedUsers, router, roomId])
 
     useEffect(() => {
         const onConnected = () => console.log('Connected');
