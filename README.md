@@ -1,5 +1,4 @@
 # Triunfoverso
-![image](https://github.com/fernandes99/triunfoverso/assets/49538386/ecf8496c-216e-4ef4-a039-a2eedb2989b8)
 https://triunfoverso.vercel.app/
 
 ## 🚀 Começando
