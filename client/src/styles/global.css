@@ -17,7 +17,7 @@
 
 body {
     overflow-x: hidden;
-    background-color: theme("colors.secondary-700");
+    background-color: theme('colors.secondary-700');
 }
 
 button,

@@ -5,7 +5,7 @@ const styles = tv({
     base: 'flex items-center justify-center gap-2 rounded-md px-5 py-3 font-medium transition-all',
     variants: {
         variant: {
-            primary: 'hover:bg-primary-500-hover bg-primary-500 text-white shadow-primary-500/40',
+            primary: 'bg-primary-500 text-white shadow-primary-500/40 hover:bg-primary-500-hover',
             secondary: '',
             ghost: 'bg-transparent text-neutral-400 hover:bg-neutral-100 hover:text-neutral-500'
         }

@@ -36,7 +36,10 @@ export default function InGameContent({ roomId }: InGameContentProps) {
         socket.on('users:update', onUpdateUser);
         socket.on('turn:update', onUpdateTurn);
 
-        socket.emit('game:on-start', { roomId, userName: storage.get('username') ||  `Anônimo${Math.random().toFixed(5)}` });
+        socket.emit('game:on-start', {
+            roomId,
+            userName: storage.get('username') || `Anônimo${Math.random().toFixed(5)}`
+        });
 
         return () => {
             socket.off('users:update', onUpdateUser);
@@ -55,7 +58,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
 
     return (
         <div className='container mx-auto flex h-screen items-center justify-center lg:w-[1200px]'>
-            <div className='relative flex w-full justify-between'>
+            <div className='relative flex w-full justify-center gap-6'>
                 {users.map((user, index) => {
                     const isFirstUser = index === 0;
                     const isSelfUser = user.id === selfUser?.id;
@@ -83,7 +86,11 @@ export default function InGameContent({ roomId }: InGameContentProps) {
                             </div>
 
                             {isSelfUser || turn?.state === 'finished' ? (
-                                <Card card={currentCard!} onSelectAttribute={onSelectAttribute} />
+                                <Card
+                                    card={currentCard!}
+                                    onSelectAttribute={onSelectAttribute}
+                                    turn={turn}
+                                />
                             ) : (
                                 <EmptyCard />
                             )}
@@ -105,6 +112,10 @@ export default function InGameContent({ roomId }: InGameContentProps) {
                         ))}
                     </ul>
                     {turn?.state === 'finished' && <span>Carregando...</span>}
+                </div>
+
+                <div className='absolute -bottom-12 left-1/2 -translate-x-1/2'>
+                    <span className='text-sm text-secondary-400'>*Ganha quem zerar o deck</span>
                 </div>
             </div>
         </div>

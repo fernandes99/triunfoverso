@@ -37,10 +37,10 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
     };
 
     useMemo(() => {
-        if (connectedUsers.length > 1 && connectedUsers.every(user => user.isReady)) {
+        if (connectedUsers.length > 1 && connectedUsers.every((user) => user.isReady)) {
             router.push(`/rooms/${roomId}/in-game`);
         }
-    }, [connectedUsers, router, roomId])
+    }, [connectedUsers, router, roomId]);
 
     useEffect(() => {
         const onConnected = () => console.log('Connected');
@@ -51,7 +51,10 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
         socket.on('disconnect', onDisconnected);
         socket.on('users:update', onUpdateUser);
 
-        socket.emit('room:connect', { roomId, userName: storage.get('username') ||  `Anônimo${Math.random().toFixed(5)}` });
+        socket.emit('room:connect', {
+            roomId,
+            userName: storage.get('username') || `Anônimo${Math.random().toFixed(5)}`
+        });
 
         return () => {
             socket.off('connect', onConnected);

@@ -2,15 +2,17 @@
 
 import { CARDS_TEST } from '@/constants/cards';
 import { IAttribute, ICard } from '@/types/card';
+import { ITurn } from '@/types/turn';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 interface CardProps {
     card: ICard;
+    turn: ITurn | null;
     onSelectAttribute: (attribute: IAttribute) => void;
 }
 
-export const Card = ({ card, onSelectAttribute }: CardProps) => {
+export const Card = ({ card, turn, onSelectAttribute }: CardProps) => {
     const cardRef = useRef<HTMLDivElement | null>(null);
     const handleMouseMove = (event: MouseEvent) => {
         if (cardRef.current) {
@@ -75,15 +77,17 @@ export const Card = ({ card, onSelectAttribute }: CardProps) => {
                         {card?.attrs?.map((attribute) => (
                             <li
                                 key={attribute.attr.slug}
-                                className='group flex cursor-pointer items-center justify-between gap-4 transition-all hover:font-semibold focus:font-semibold'
+                                className={`${turn?.state === 'finished' ? 'cursor-wait' : ''} group flex cursor-pointer items-center justify-between gap-4 transition-all hover:font-semibold focus:font-semibold`}
                                 tabIndex={1}
-                                onClick={() => onSelectAttribute(attribute)}
+                                onClick={() =>
+                                    turn?.state !== 'finished' && onSelectAttribute(attribute)
+                                }
                             >
                                 <span className='whitespace-nowrap break-keep text-secondary-200 group-hover:text-primary-500'>
                                     {attribute.attr.title}
                                 </span>
                                 <div className='h-[1px] w-full border border-dashed border-secondary-700' />
-                                <span className='font-bold text-secondary-200 group-hover:text-primary-500 group-focus:text-primary-500'>
+                                <span className='font-bold text-secondary-200 group-hover:text-primary-500'>
                                     {attribute.value}
                                 </span>
                             </li>
