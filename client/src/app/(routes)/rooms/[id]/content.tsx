@@ -5,7 +5,7 @@ import { IUser } from '@/types/user';
 import useCopyToClipboard from '@/utils/hooks/useClipboard';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { LuCopy } from 'react-icons/lu';
