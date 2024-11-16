@@ -1,9 +1,9 @@
 import RoomContent from './content';
 
+type TParams = Promise<{ id: string }>;
+
 interface RoomPageProps {
-  params: {
-    id: string;
-  };
+  params: TParams;
 }
 
 export default async function RoomPage({ params }: RoomPageProps) {

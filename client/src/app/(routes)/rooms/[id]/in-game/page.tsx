@@ -1,9 +1,8 @@
 import InGameContent from './content';
 
+type TParams = Promise<{ id: string }>;
 interface InGamePageProps {
-  params: {
-    id: string;
-  };
+  params: TParams;
 }
 
 export default async function InGamePage({ params }: InGamePageProps) {
