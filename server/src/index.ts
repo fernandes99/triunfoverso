@@ -1,13 +1,13 @@
 import cors from "cors";
-import http from "http";
 import express from "express";
+import http from "http";
 import { Server, Socket } from "socket.io";
 
-import { Global } from "./store/global";
-import { registerRoomHandlers } from "./handlers/room";
-import { registerUserHandlers } from "./handlers/user";
 import { registerGameHandlers } from "./handlers/game";
+import { registerPlayerHandlers } from "./handlers/player";
+import { registerRoomHandlers } from "./handlers/room";
 import { registerTurnHandlers } from "./handlers/turn";
+import { Global } from "./store/global";
 
 const port = process.env.PORT || 8000;
 const app = express().use(cors());
@@ -22,23 +22,20 @@ const io = new Server(server, {
 }) as Server;
 
 const onConnection = (socket: Socket) => {
-  console.log("User Connected: ", socket.id);
+  console.log("Player Connected: ", socket.id);
 
   registerRoomHandlers(io, socket);
-  registerUserHandlers(io, socket);
+  registerPlayerHandlers(io, socket);
   registerGameHandlers(io, socket);
   registerTurnHandlers(io, socket);
 
   socket.on("disconnect", () => {
-    console.log("User Disconnected: ", socket.id);
+    console.log("Player Disconnected: ", socket.id);
 
-    const roomId = socket.data.roomId;
-    const users = global.getState().users;
-    const usersFiltered = users.filter((user) => user.id !== socket.id);
+    const roomId = socket.data.roomId as string;
 
-    global.updateUsers(usersFiltered);
-
-    io.in(roomId).emit("users:update", usersFiltered);
+    global.removeRoomPlayer(socket.data.roomId, socket.id);
+    io.in(roomId).emit("players:update", global.getRoomState(roomId).players);
   });
 };
 

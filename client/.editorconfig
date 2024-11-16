@@ -1,7 +1,7 @@
 [*]
 indent_style = space
 indent_size = 2
-tab_size = 4
+tab_size = 2
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
@@ -13,7 +13,7 @@ indent_size = 2
 
 [.editorconfig]
 indent_style = space
-indent_size = 4
+indent_size = 2
 
 [*.less]
 indent_style = space
@@ -23,21 +23,9 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
-[*.ejs]
-indent_style = space
-indent_size = 4
-
 [{.analysis_options, *.yml, *.yaml}]
 indent_style = space
 indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
-
-# Minified JavaScript files shouldn't be changed
-[**.min.js]
-indent_style = space
-insert_final_newline = false
-
-[*.gitkeep]
-insert_final_newline = false

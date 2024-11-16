@@ -1,19 +1,16 @@
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
 
-import {
-  getUsersFilteredByRoom,
-  shuffle,
-  updateTurnHistory,
-} from "../utils/general";
-import { ITurn } from "../types/turn";
 import { IAttribute } from "../types/card";
+import { ITurn } from "../types/turn";
+import { updateTurnHistory } from "../utils/general";
 
 interface IOnTurnPass {
-  turn: ITurn;
+  roomId: string;
 }
 
 interface IOnSelectAttribute {
+  roomId: string;
   turn: ITurn;
   attribute: IAttribute;
 }
@@ -21,56 +18,54 @@ interface IOnSelectAttribute {
 export const registerTurnHandlers = (io: Server, socket: Socket) => {
   const global = Global.getInstance();
 
-  const onTurnPass = (props: IOnTurnPass) => {
-    const turn = global.getState().turn;
-    const users = global.getState().users;
-    const userFiltered = getUsersFilteredByRoom(users, props.turn.roomId);
-    const currentUser = userFiltered[(turn?.round! + 1) % 2];
+  const onTurnPass = ({ roomId }: IOnTurnPass) => {
+    const { turn, players } = global.getRoomState(roomId);
+    const currentPlayer = players[(turn?.round! + 1) % 2];
     const turnUpdated = {
       ...turn,
-      currentUser: currentUser,
+      currentPlayer: currentPlayer,
       round: turn?.round! + 1,
-      history: updateTurnHistory(`Vez de ${currentUser.name}`, turn?.history!),
+      history: updateTurnHistory(
+        `Vez de ${currentPlayer.name}`,
+        turn?.history!
+      ),
       state: "initial",
       result: null,
     } as ITurn;
-
-    const usersUpdated = users.map((user) => {
-      if (user.id === turn?.result?.winner?.id) {
-        user.cards.shift();
-        return user;
+    const playersUpdated = players.map((player) => {
+      if (player.id === turn?.result?.winner?.id) {
+        player.cards.shift();
+        return player;
       }
 
-      if (user.id === turn?.result?.loser?.id) {
-        user.cards = [...user.cards, user.cards[0]];
-        user.cards.shift();
-        return user;
+      if (player.id === turn?.result?.loser?.id) {
+        player.cards = [...player.cards, player.cards[0]];
+        player.cards.shift();
+        return player;
       }
 
-      return user;
+      return player;
     });
 
-    global.setState({ ...global, users: usersUpdated, turn: turnUpdated });
+    global.setRoomState(roomId, { players: playersUpdated, turn: turnUpdated });
 
-    io.in(props.turn.roomId).emit("turn:update", turnUpdated);
-    io.in(props.turn.roomId).emit(
-      "users:update",
-      getUsersFilteredByRoom(usersUpdated, props.turn.roomId)
-    );
+    io.in(roomId).emit("sv_turn:update", turnUpdated);
+    io.in(roomId).emit("players:update", playersUpdated);
   };
 
-  const onSelectAttribute = (props: IOnSelectAttribute) => {
-    const { users, turn } = global.getState();
-    const userFiltered = getUsersFilteredByRoom(users, turn?.roomId!);
-    const user = userFiltered.find((user) => user.id === socket.id);
-    const enemy = userFiltered.find((user) => user.id !== socket.id);
+  const onSelectAttribute = ({
+    roomId,
+    turn: turnUpdatedData,
+    attribute,
+  }: IOnSelectAttribute) => {
+    const { turn, players } = global.getRoomState(roomId);
+    const player = players.find((player) => player.id === socket.id);
+    const enemy = players.find((player) => player.id !== socket.id);
     const attributesEnemy = enemy?.cards[0].attrs.find(
-      (attr) => attr.attr.slug === props.attribute.attr.slug
+      (attr) => attr.attr.slug === attribute.attr.slug
     );
-    const winner =
-      props.attribute.value >= attributesEnemy?.value! ? user : enemy;
-    const loser =
-      props.attribute.value >= attributesEnemy?.value! ? enemy : user;
+    const winner = attribute.value >= attributesEnemy?.value! ? player : enemy;
+    const loser = attribute.value >= attributesEnemy?.value! ? enemy : player;
     const finishedGame = winner?.cards?.length && winner?.cards?.length <= 1;
 
     if (finishedGame && socket.id === winner.id) {
@@ -78,7 +73,7 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
     }
 
     const turnUpdated = {
-      ...props.turn,
+      ...turnUpdatedData,
       state: "finished",
       result: {
         winner,
@@ -92,11 +87,11 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
       ),
     } as ITurn;
 
-    global.setState({ ...global, users, turn: turnUpdated });
+    global.setRoomState(roomId, { players, turn: turnUpdated });
 
-    io.in(props.turn.roomId).emit("turn:update", turnUpdated);
+    io.in(roomId).emit("sv_turn:update", turnUpdated);
   };
 
-  socket.on("turn:on-pass", onTurnPass);
-  socket.on("turn:on-select-attribute", onSelectAttribute);
+  socket.on("cl_turn:on-pass", onTurnPass);
+  socket.on("cl_turn:on-select-attribute", onSelectAttribute);
 };

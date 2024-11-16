@@ -1,15 +1,15 @@
-import { IUser } from './user';
+import { IPlayer } from "./player";
 
 export interface ITurn {
-    currentUser: IUser;
-    roomId: string;
-    round: number;
-    history: string[];
-    result: ITurnResult | null;
-    state: 'initial' | 'in-dispute' | 'finished';
+  currentPlayer: IPlayer;
+  roomId: string;
+  round: number;
+  history: string[];
+  result: ITurnResult | null;
+  state: "initial" | "in-dispute" | "finished";
 }
 
 interface ITurnResult {
-    winner: IUser;
-    loser: IUser;
+  winner: IPlayer;
+  loser: IPlayer;
 }

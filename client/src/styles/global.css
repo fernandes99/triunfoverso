@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 @layer utilities {
-    @variants responsive {
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+  @variants responsive {
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
     }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  }
 }
 
 body {
-    overflow-x: hidden;
-    background-color: theme('colors.secondary-700');
+  overflow-x: hidden;
+  background-color: theme('colors.secondary-700');
 }
 
 button,
 a {
-    transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
