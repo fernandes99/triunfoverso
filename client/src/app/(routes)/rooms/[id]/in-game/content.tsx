@@ -1,5 +1,6 @@
 'use client';
 
+import Loading from '@/components/Loading';
 import { IAttribute } from '@/types/card';
 import { IPlayer } from '@/types/player';
 import { ITurn } from '@/types/turn';
@@ -19,6 +20,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
   const [turn, setTurn] = useState<ITurn | null>(null);
 
   const selfPlayer = players.find((player) => player.id === socket.id);
+  const isSelfTurn = turn?.currentPlayer.id === selfPlayer?.id;
 
   const onSelectAttribute = (attribute: IAttribute) => {
     socket.emit('cl_turn:on-select-attribute', { roomId: turn?.roomId, turn, attribute });
@@ -87,7 +89,12 @@ export default function InGameContent({ roomId }: InGameContentProps) {
               </div>
 
               {isSelfPlayer || turn?.state === 'finished' ? (
-                <Card card={currentCard!} onSelectAttribute={onSelectAttribute} turn={turn} />
+                <Card
+                  card={currentCard!}
+                  onSelectAttribute={onSelectAttribute}
+                  turn={turn}
+                  disableActions={!isSelfTurn}
+                />
               ) : (
                 <EmptyCard />
               )}
@@ -100,19 +107,20 @@ export default function InGameContent({ roomId }: InGameContentProps) {
             {turn?.history.map((action, index) => (
               <li
                 key={index}
-                className={`${index === 0 ? 'text-lg font-semibold text-secondary-200' : 'font-normal text-secondary-200/50'} ${index === 2 && 'font-normal text-secondary-200/20'} `}
+                className={`${index === 0 ? 'text-lg font-semibold text-secondary-200' : 'font-normal text-secondary-200/50'} ${index === 1 && 'font-normal text-secondary-200/20'} ${index >= 2 && 'font-normal text-secondary-200/10'}`}
               >
                 {action}
               </li>
             ))}
           </ul>
-          {turn?.state === 'finished' && <span>Carregando...</span>}
         </div>
 
         <div className='absolute -bottom-12 left-1/2 -translate-x-1/2'>
           <span className='text-sm text-secondary-400'>*Ganha quem zerar o deck</span>
         </div>
       </div>
+
+      {turn?.state === 'finished' && <Loading />}
     </div>
   );
 }
