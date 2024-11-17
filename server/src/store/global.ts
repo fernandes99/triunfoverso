@@ -19,12 +19,15 @@ export class Global {
   }
 
   public getRoomState(roomId: TRoomId) {
-    if (!this.state.rooms[roomId]) {
+    const existRoom = !!this.state.rooms[roomId];
+
+    if (!existRoom) {
       this.state.rooms[roomId] = {
         players: [],
         turn: null,
       };
     }
+
     return this.state.rooms[roomId];
   }
 

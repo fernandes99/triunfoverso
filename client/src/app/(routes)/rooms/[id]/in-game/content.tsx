@@ -34,7 +34,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
     const onYouWin = () => alert('Parabéns, você ganhou!');
     const onYouLose = () => alert('Vish, tu perdeu irmão!');
 
-    socket.on('players:update', onUpdatePlayer);
+    socket.on('sv_players:update', onUpdatePlayer);
     socket.on('sv_turn:update', onUpdateTurn);
     socket.on('game:you-lose', onYouLose);
     socket.on('game:you-win', onYouWin);
@@ -45,7 +45,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
     });
 
     return () => {
-      socket.off('players:update', onUpdatePlayer);
+      socket.off('sv_players:update', onUpdatePlayer);
       socket.off('sv_turn:update', onUpdateTurn);
       socket.off('game:you-lose', onYouLose);
       socket.off('game:you-win', onYouWin);

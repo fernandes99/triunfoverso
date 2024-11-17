@@ -60,7 +60,7 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
 
     socket.on('connect', onConnected);
     socket.on('disconnect', onDisconnected);
-    socket.on('players:update', onUpdatePlayer);
+    socket.on('sv_players:update', onUpdatePlayer);
 
     socket.emit('cl_room:connect', {
       roomId,
@@ -70,7 +70,7 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
     return () => {
       socket.off('connect', onConnected);
       socket.off('disconnect', onDisconnected);
-      socket.off('players:update', onUpdatePlayer);
+      socket.off('sv_players:update', onUpdatePlayer);
     };
   }, [roomId]);
 

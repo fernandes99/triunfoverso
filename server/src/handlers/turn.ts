@@ -50,7 +50,7 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
     global.setRoomState(roomId, { players: playersUpdated, turn: turnUpdated });
 
     io.in(roomId).emit("sv_turn:update", turnUpdated);
-    io.in(roomId).emit("players:update", playersUpdated);
+    io.in(roomId).emit("sv_players:update", playersUpdated);
   };
 
   const onSelectAttribute = ({

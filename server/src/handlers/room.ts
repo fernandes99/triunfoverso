@@ -31,7 +31,10 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     socket.join(roomId);
     socket.data.roomId = roomId;
 
-    io.in(roomId).emit("players:update", global.getRoomState(roomId).players);
+    io.in(roomId).emit(
+      "sv_players:update",
+      global.getRoomState(roomId).players
+    );
   };
 
   socket.on("cl_room:connect", connectRoom);

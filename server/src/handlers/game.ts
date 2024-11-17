@@ -43,7 +43,7 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
     socket.data.roomId = roomId;
 
     io.in(roomId).emit("sv_turn:update", turnUpdated);
-    io.in(roomId).emit("players:update", playersUpdated);
+    io.in(roomId).emit("sv_players:update", playersUpdated);
   };
 
   socket.on("cl_game:on-start", onStartGame);

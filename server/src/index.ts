@@ -35,7 +35,10 @@ const onConnection = (socket: Socket) => {
     const roomId = socket.data.roomId as string;
 
     global.removeRoomPlayer(socket.data.roomId, socket.id);
-    io.in(roomId).emit("players:update", global.getRoomState(roomId).players);
+    io.in(roomId).emit(
+      "sv_players:update",
+      global.getRoomState(roomId).players
+    );
   });
 };
 
