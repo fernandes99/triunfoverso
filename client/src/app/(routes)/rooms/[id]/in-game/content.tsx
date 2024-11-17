@@ -1,6 +1,7 @@
 'use client';
 
 import Loading from '@/components/Loading';
+import { RESET_TURN_TIMEOUT } from '@/constants/timers';
 import { IAttribute } from '@/types/card';
 import { IPlayer } from '@/types/player';
 import { ITurn } from '@/types/turn';
@@ -56,7 +57,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
 
   useEffect(() => {
     if (turn?.state === 'finished' && socket.id === turn.currentPlayer.id) {
-      setTimeout(passTurn, 5000);
+      setTimeout(passTurn, RESET_TURN_TIMEOUT);
     }
   }, [turn, passTurn]);
 

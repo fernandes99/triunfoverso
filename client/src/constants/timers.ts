@@ -1,0 +1,2 @@
+export const RESET_TURN_TIMEOUT = 5000;
+export const FLIP_ANIMATION_TIMEOUT = 1000;
