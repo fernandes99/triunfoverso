@@ -1,23 +1,26 @@
-export interface ICard {
+import { TImageGql } from './global';
+
+export type TCard = {
   id: string;
   title: string;
   slug: string;
-  attrs: IAttribute[];
-  image: {
-    blurhash: string;
-    url: string;
-  };
-  logo: {
-    url: string;
-    width: number;
-    height: number;
-  };
-}
+  image: TImageGql;
+  logo: TImageGql;
+  attrs: TCardAttribute[];
+};
 
-export interface IAttribute {
+export type TCardAttribute = {
+  id: string;
   value: number;
   attr: {
-    slug: string;
+    id: string;
     title: string;
+    slug: string;
   };
-}
+};
+
+export type TGetAllResultCards = {
+  data: {
+    cards: TCard[];
+  };
+};

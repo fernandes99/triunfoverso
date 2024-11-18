@@ -2,8 +2,8 @@
 
 import Loading from '@/components/Loading';
 import { RESET_TURN_TIMEOUT } from '@/constants/timers';
-import { IAttribute } from '@/types/card';
-import { IPlayer } from '@/types/player';
+import { TCardAttribute } from '@/types/card';
+import { TPlayer } from '@/types/player';
 import { ITurn } from '@/types/turn';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
@@ -17,13 +17,13 @@ interface InGameContentProps {
 }
 
 export default function InGameContent({ roomId }: InGameContentProps) {
-  const [players, setPlayers] = useState<IPlayer[]>([]);
+  const [players, setPlayers] = useState<TPlayer[]>([]);
   const [turn, setTurn] = useState<ITurn | null>(null);
 
   const selfPlayer = players.find((player) => player.id === socket.id);
   const isSelfTurn = turn?.currentPlayer.id === selfPlayer?.id;
 
-  const onSelectAttribute = (attribute: IAttribute) => {
+  const onSelectAttribute = (attribute: TCardAttribute) => {
     socket.emit('cl_turn:on-select-attribute', { roomId: turn?.roomId, turn, attribute });
   };
 

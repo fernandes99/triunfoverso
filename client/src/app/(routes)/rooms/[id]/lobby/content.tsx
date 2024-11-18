@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/Button';
-import { IPlayer } from '@/types/player';
+import { TPlayer } from '@/types/player';
 import useCopyToClipboard from '@/utils/hooks/useClipboard';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
@@ -23,7 +23,7 @@ interface WelcomeContentProps {
 
 export default function RoomContent({ roomId }: WelcomeContentProps) {
   const router = useRouter();
-  const [connectedPlayers, setConnectedPlayers] = useState<IPlayer[]>([]);
+  const [connectedPlayers, setConnectedPlayers] = useState<TPlayer[]>([]);
   const [isReady, setIsReady] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard('', 3000);
 

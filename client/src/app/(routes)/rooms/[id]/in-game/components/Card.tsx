@@ -1,7 +1,7 @@
 'use client';
 
 import { FLIP_ANIMATION_TIMEOUT, RESET_TURN_TIMEOUT } from '@/constants/timers';
-import { IAttribute, ICard } from '@/types/card';
+import { TCard, TCardAttribute } from '@/types/card';
 import { ITurn } from '@/types/turn';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -9,10 +9,10 @@ import toast from 'react-hot-toast';
 import { EmptyCard } from './EmptyCard';
 
 interface CardProps {
-  card: ICard;
+  card: TCard;
   turn: ITurn | null;
   disableActions: boolean;
-  onSelectAttribute: (attribute: IAttribute) => void;
+  onSelectAttribute: (attribute: TCardAttribute) => void;
 }
 
 export const Card = ({ card, turn, onSelectAttribute, disableActions = true }: CardProps) => {
@@ -20,7 +20,7 @@ export const Card = ({ card, turn, onSelectAttribute, disableActions = true }: C
   const [attemptsAction, setAttemptsAction] = useState(0);
   const [showCard, setShowCard] = useState(false);
 
-  const onClickAttrtibute = (attribute: IAttribute) => {
+  const onClickAttrtibute = (attribute: TCardAttribute) => {
     if (disableActions) {
       if (attemptsAction > 2) {
         return toast('Tu é burro hein? Não é a sua vez ainda!', {

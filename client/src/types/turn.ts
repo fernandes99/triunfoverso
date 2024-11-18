@@ -1,7 +1,7 @@
-import { IPlayer } from './player';
+import { TPlayer } from './player';
 
 export interface ITurn {
-  currentPlayer: IPlayer;
+  currentPlayer: TPlayer;
   roomId: string;
   round: number;
   history: string[];

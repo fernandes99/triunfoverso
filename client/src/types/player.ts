@@ -1,9 +1,9 @@
-import { ICard } from './card';
+import { TCard } from './card';
 
-export interface IPlayer {
+export interface TPlayer {
   id: string;
   name: string;
   roomId: string;
-  cards: ICard[];
+  cards: TCard[];
   isReady: boolean;
 }
