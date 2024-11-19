@@ -1,4 +1,4 @@
-import { TCard } from './card';
+import { TCard } from "./card";
 
 export type TDeck = {
   id: string;

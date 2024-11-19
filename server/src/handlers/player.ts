@@ -1,9 +1,10 @@
+import { TPlayer } from "@shared/types/player";
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
 
 interface IOnReadyPlayer {
   roomId: string;
-  isReady: boolean;
+  isReady: TPlayer["isReady"];
 }
 
 export const registerPlayerHandlers = (io: Server, socket: Socket) => {

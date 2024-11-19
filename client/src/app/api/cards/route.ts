@@ -1,4 +1,4 @@
-import { cardService } from '@/services/cards';
+import { cardService } from '@/services/card';
 
 export async function GET() {
   try {

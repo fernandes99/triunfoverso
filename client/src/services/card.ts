@@ -1,7 +1,7 @@
 import { config } from '@/config/general';
 import { MOUNTH_IN_SECOND } from '@/constants/timers';
-import { TGetAllResultCards } from '@/types/card';
 import { getQueryAllCards } from '@/utils/graphql/gqlCards';
+import { TGetAllResultCards } from '@shared/types/card';
 
 export const cardService = {
   getAll: async () => {

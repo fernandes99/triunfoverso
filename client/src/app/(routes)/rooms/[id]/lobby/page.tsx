@@ -6,7 +6,7 @@ interface RoomPageProps {
   params: TParams;
 }
 
-export default async function RoomPage({ params }: RoomPageProps) {
+export default async function RoomPage({ params }: Readonly<RoomPageProps>) {
   const { id } = await params;
 
   return (

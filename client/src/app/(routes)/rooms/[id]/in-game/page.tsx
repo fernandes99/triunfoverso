@@ -5,7 +5,7 @@ interface InGamePageProps {
   params: TParams;
 }
 
-export default async function InGamePage({ params }: InGamePageProps) {
+export default async function InGamePage({ params }: Readonly<InGamePageProps>) {
   const { id } = await params;
 
   return (

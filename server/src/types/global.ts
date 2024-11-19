@@ -1,13 +1,15 @@
-import { ITurn } from "./turn";
-import { IPlayer } from "./player";
+import { TDeck } from "@shared/types/deck";
+import { TPlayer } from "@shared/types/player";
+import { TTurn } from "@shared/types/turn";
 
-export interface IRoom {
-  players: IPlayer[];
-  turn: ITurn | null;
-}
+export type TRoom = {
+  players: TPlayer[];
+  turn: Nullable<TTurn>;
+  deck?: Nullable<TDeck>;
+};
 
 export type TRoomId = string;
 
-export interface IGlobal {
-  rooms: Record<TRoomId, IRoom>;
-}
+export type TGlobal = {
+  rooms: Record<TRoomId, TRoom>;
+};

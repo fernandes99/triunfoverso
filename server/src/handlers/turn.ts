@@ -1,8 +1,8 @@
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
 
-import { IAttribute } from "../types/card";
-import { ITurn } from "../types/turn";
+import { TCardAttribute } from "@shared/types/card";
+import { TTurn } from "@shared/types/turn";
 import { updateTurnHistory } from "../utils/general";
 
 interface IOnTurnPass {
@@ -11,8 +11,8 @@ interface IOnTurnPass {
 
 interface IOnSelectAttribute {
   roomId: string;
-  turn: ITurn;
-  attribute: IAttribute;
+  turn: TTurn;
+  attribute: TCardAttribute;
 }
 
 export const registerTurnHandlers = (io: Server, socket: Socket) => {
@@ -31,7 +31,7 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
       ),
       state: "initial",
       result: null,
-    } as ITurn;
+    } as TTurn;
     const playersUpdated = players.map((player) => {
       if (player.id === turn?.result?.winner?.id) {
         player.cards.shift();
@@ -85,7 +85,7 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
           : `${winner?.name} ganhou a rodada!`,
         turn?.history!
       ),
-    } as ITurn;
+    } as TTurn;
 
     global.setRoomState(roomId, { players, turn: turnUpdated });
 

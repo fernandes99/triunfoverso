@@ -1,4 +1,4 @@
-import { ITurn } from "../types/turn";
+import { TTurn } from "@shared/types/turn";
 
 export const shuffle = (array: any[]) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -10,7 +10,7 @@ export const shuffle = (array: any[]) => {
 
 export const updateTurnHistory = (
   value: string,
-  currentTurnHistory: ITurn["history"]
+  currentTurnHistory: TTurn["history"]
 ) => {
   if (!currentTurnHistory) {
     return [value];
@@ -24,6 +24,5 @@ export const updateTurnHistory = (
 };
 
 export const isEmptyObject = (obj: object) => {
-  console.log("OBBBBHJJJJJ", obj);
   return !!obj && Object.keys(obj).length === 0;
 };

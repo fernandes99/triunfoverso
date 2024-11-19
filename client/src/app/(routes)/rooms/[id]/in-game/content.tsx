@@ -1,14 +1,16 @@
 'use client';
 
-import Loading from '@/components/Loading';
-import { RESET_TURN_TIMEOUT } from '@/constants/timers';
-import { TCardAttribute } from '@/types/card';
-import { TPlayer } from '@/types/player';
-import { ITurn } from '@/types/turn';
-import storage from '@/utils/scripts/storage';
-import { socket } from '@/utils/socket';
 import { useCallback, useEffect, useState } from 'react';
 import { TbCards } from 'react-icons/tb';
+
+import Loading from '@/components/Loading';
+import { RESET_TURN_TIMEOUT } from '@/constants/timers';
+import storage from '@/utils/scripts/storage';
+import { socket } from '@/utils/socket';
+import { TCardAttribute } from '@shared/types/card';
+import { TGame } from '@shared/types/game';
+import { TPlayer } from '@shared/types/player';
+import { TTurn } from '@shared/types/turn';
 import { Card } from './components/Card';
 import { EmptyCard } from './components/EmptyCard';
 
@@ -16,9 +18,10 @@ interface InGameContentProps {
   roomId: string;
 }
 
-export default function InGameContent({ roomId }: InGameContentProps) {
+export default function InGameContent({ roomId }: Readonly<InGameContentProps>) {
   const [players, setPlayers] = useState<TPlayer[]>([]);
-  const [turn, setTurn] = useState<ITurn | null>(null);
+  const [turn, setTurn] = useState<Nullable<TTurn>>(null);
+  const [game, setGame] = useState<Nullable<TGame>>(null);
 
   const selfPlayer = players.find((player) => player.id === socket.id);
   const isSelfTurn = turn?.currentPlayer.id === selfPlayer?.id;
@@ -91,7 +94,7 @@ export default function InGameContent({ roomId }: InGameContentProps) {
 
               {isSelfPlayer || turn?.state === 'finished' ? (
                 <Card
-                  card={currentCard!}
+                  card={currentCard}
                   onSelectAttribute={onSelectAttribute}
                   turn={turn}
                   disableActions={!isSelfTurn}

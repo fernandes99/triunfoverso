@@ -1,9 +1,9 @@
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
 
+import { TPlayer } from "@shared/types/player";
+import { TTurn } from "@shared/types/turn";
 import { CARDS } from "../constants/cards";
-import { IPlayer } from "../types/player";
-import { ITurn } from "../types/turn";
 import { shuffle } from "../utils/general";
 
 interface IOnStartGame {
@@ -24,7 +24,7 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
         isReady: true,
         cards: shuffle([...CARDS]),
         roomId,
-      } as IPlayer,
+      } as TPlayer,
     ];
     const turnUpdated = {
       currentPlayer: playersUpdated[0],
@@ -32,11 +32,12 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
       round: 0,
       state: "initial",
       history: [`Vez de ${playersUpdated[0].name}`],
-    } as ITurn;
+    } as TTurn;
 
     global.setRoomState(roomId, {
       players: playersUpdated,
       turn: turnUpdated,
+      deck: null,
     });
 
     socket.join(roomId);

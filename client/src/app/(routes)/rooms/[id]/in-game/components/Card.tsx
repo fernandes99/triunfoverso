@@ -1,8 +1,8 @@
 'use client';
 
 import { FLIP_ANIMATION_TIMEOUT, RESET_TURN_TIMEOUT } from '@/constants/timers';
-import { TCard, TCardAttribute } from '@/types/card';
-import { ITurn } from '@/types/turn';
+import { TCard, TCardAttribute } from '@shared/types/card';
+import { TTurn } from '@shared/types/turn';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -10,7 +10,7 @@ import { EmptyCard } from './EmptyCard';
 
 interface CardProps {
   card: TCard;
-  turn: ITurn | null;
+  turn: TTurn | null;
   disableActions: boolean;
   onSelectAttribute: (attribute: TCardAttribute) => void;
 }

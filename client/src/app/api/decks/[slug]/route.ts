@@ -1,4 +1,4 @@
-import { deckService } from '@/services/decks';
+import { deckService } from '@/services/deck';
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -6,7 +6,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     const responseData = await deckService.getBySlug(slug);
     return Response.json(responseData);
   } catch (error) {
-    return new Response(`Error on get cards: ${error}`, {
+    return new Response(`Error on get deck: ${error}`, {
       status: 500
     });
   }

@@ -1,15 +1,17 @@
 'use client';
 
+import toast from 'react-hot-toast';
+import Select from 'react-select';
+
 import Button from '@/components/Button';
-import { TPlayer } from '@/types/player';
 import useCopyToClipboard from '@/utils/hooks/useClipboard';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
+import { TGame } from '@shared/types/game';
+import { TPlayer } from '@shared/types/player';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
 import { LuArrowLeft, LuCopy } from 'react-icons/lu';
-import Select from 'react-select';
 
 const options = [
   { value: 'series', label: 'Séries' },
@@ -21,13 +23,15 @@ interface WelcomeContentProps {
   roomId: string;
 }
 
-export default function RoomContent({ roomId }: WelcomeContentProps) {
+export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
   const router = useRouter();
   const [connectedPlayers, setConnectedPlayers] = useState<TPlayer[]>([]);
+  const [game, setGame] = useState<Nullable<TGame>>(null);
   const [isReady, setIsReady] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard('', 3000);
 
   const goToHome = () => {
+    socket.disconnect();
     router.push('/');
   };
 
@@ -57,6 +61,7 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
     const onConnected = () => console.log('Connected');
     const onDisconnected = () => console.log('Disconnected');
     const onUpdatePlayer = setConnectedPlayers;
+    const onUpdateGame = setGame;
 
     socket.on('connect', onConnected);
     socket.on('disconnect', onDisconnected);
@@ -71,6 +76,7 @@ export default function RoomContent({ roomId }: WelcomeContentProps) {
       socket.off('connect', onConnected);
       socket.off('disconnect', onDisconnected);
       socket.off('sv_players:update', onUpdatePlayer);
+      socket.off('sv_game:get-deck', onUpdateGame);
     };
   }, [roomId]);
 

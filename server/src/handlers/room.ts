@@ -1,16 +1,16 @@
+import { TPlayer } from "@shared/types/player";
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
-import { IPlayer } from "../types/player";
 
-interface IConnectRoom {
+type TConnectRoom = {
   roomId: string;
   playerName: string;
-}
+};
 
 export const registerRoomHandlers = (io: Server, socket: Socket) => {
   const global = Global.getInstance();
 
-  const connectRoom = ({ roomId, playerName }: IConnectRoom) => {
+  const connectRoom = ({ roomId, playerName }: TConnectRoom) => {
     const newPlayerData = {
       id: socket.id,
       name: playerName,
@@ -18,7 +18,7 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
       isReady: false,
       cards: [],
       graveyard: [],
-    } as IPlayer;
+    } as TPlayer;
 
     const players = global.getRoomState(roomId).players;
     const newPlayers = [
@@ -27,6 +27,12 @@ export const registerRoomHandlers = (io: Server, socket: Socket) => {
     ];
 
     global.updateRoomPlayers(roomId, newPlayers);
+
+    const isNewRoom = !io.sockets.adapter.rooms.get(roomId);
+
+    if (isNewRoom) {
+      io.to(socket.id).emit("sv_game:get-deck");
+    }
 
     socket.join(roomId);
     socket.data.roomId = roomId;

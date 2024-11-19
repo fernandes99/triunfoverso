@@ -1,9 +1,9 @@
-import { IPlayer } from "src/types/player";
-import { IGlobal, IRoom, TRoomId } from "../types/global";
+import { TPlayer } from "@shared/types/player";
+import { TGlobal, TRoom, TRoomId } from "../types/global";
 
 export class Global {
   private static instance: Global;
-  private state: IGlobal;
+  private state: TGlobal;
 
   private constructor() {
     this.state = {
@@ -25,30 +25,24 @@ export class Global {
       this.state.rooms[roomId] = {
         players: [],
         turn: null,
+        deck: null,
       };
     }
 
     return this.state.rooms[roomId];
   }
 
-  public setRoomState(roomId: TRoomId, newState: IRoom) {
+  public setRoomState(roomId: TRoomId, newState: TRoom) {
     this.state.rooms[roomId] = newState;
   }
 
-  public createRoomState(roomId: TRoomId, playerState: IPlayer) {
-    this.state.rooms[roomId] = {
-      turn: null,
-      players: [playerState],
-    };
-  }
-
-  public updateRoomPlayers(roomId: TRoomId, playerListState: IRoom["players"]) {
+  public updateRoomPlayers(roomId: TRoomId, playerListState: TRoom["players"]) {
     this.state.rooms[roomId].players = playerListState;
   }
 
   public updateRoomReadyPlayer(
     roomId: TRoomId,
-    playerId: IPlayer["id"],
+    playerId: TPlayer["id"],
     isReady: boolean
   ) {
     const newPlayersData = this.state.rooms[roomId].players.map((player) => {
@@ -65,7 +59,7 @@ export class Global {
     this.state.rooms[roomId].players = newPlayersData;
   }
 
-  public removeRoomPlayer(roomId: TRoomId, playerId: IPlayer["id"]) {
+  public removeRoomPlayer(roomId: TRoomId, playerId: TPlayer["id"]) {
     if (this.state.rooms[roomId]) {
       const playersFiltered = this.state.rooms[roomId].players.filter(
         (player) => player.id !== playerId

@@ -1,4 +1,4 @@
-import { TImageGql } from './global';
+import { type TImageGql } from "../../client/src/types/global";
 
 export type TCard = {
   id: string;
