@@ -9,6 +9,6 @@ export type TDeck = {
 
 export type TGetAllResultDecks = {
   data: {
-    decks: TCard[];
+    decks: TDeck[];
   };
 };

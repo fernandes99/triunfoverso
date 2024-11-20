@@ -19,7 +19,13 @@ interface ButtonProps extends ComponentProps<'button'>, VariantProps<typeof styl
   children: ReactNode;
 }
 
-export default function Button({ children, className, variant, ...rest }: ButtonProps) {
+export default function Button({
+  children,
+  className,
+  variant,
+  type = 'button',
+  ...rest
+}: ButtonProps) {
   return (
     <button className={styles({ variant, className })} {...rest}>
       {children}

@@ -1,39 +1,37 @@
 {
-    "name": "triunfoverso",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "server": "node server",
-        "lint": "next lint"
-    },
-    "dependencies": {
-        "@reduxjs/toolkit": "^2.3.0",
-        "next": "15.0.3",
-        "react": "19.0.0-rc.1",
-        "react-dom": "19.0.0-rc.1",
-        "react-hot-toast": "^2.4.1",
-        "react-icons": "^5.3.0",
-        "react-redux": "^9.1.2",
-        "react-select": "^5.8.3",
-        "socket.io": "^4.8.1",
-        "socket.io-client": "^4.8.1",
-        "tailwind-variants": "^0.3.0",
-        "tailwindcss-animated": "^1.1.2"
-    },
-    "devDependencies": {
-        "@types/node": "^22.9.0",
-        "@types/react": "^18.3.12",
-        "@types/react-dom": "^18.3.1",
-        "autoprefixer": "^10.4.20",
-        "eslint": "^9.15.0",
-        "eslint-config-next": "15.0.3",
-        "postcss": "^8.4.49",
-        "prettier": "3.3.3",
-        "prettier-plugin-tailwindcss": "^0.6.8",
-        "tailwindcss": "^3.4.15",
-        "typescript": "^5.6.3"
-    }
+  "name": "triunfoverso",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "server": "node server",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.0.3",
+    "react": "19.0.0-rc.1",
+    "react-dom": "19.0.0-rc.1",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.3.0",
+    "react-select": "^5.8.3",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "tailwind-variants": "^0.3.0",
+    "tailwindcss-animated": "^1.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.15.0",
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8.4.49",
+    "prettier": "3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3"
+  }
 }

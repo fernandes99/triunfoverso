@@ -47,7 +47,11 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
       return player;
     });
 
-    global.setRoomState(roomId, { players: playersUpdated, turn: turnUpdated });
+    global.setRoomState(roomId, {
+      ...global.getRoomState(roomId),
+      players: playersUpdated,
+      turn: turnUpdated,
+    });
 
     io.in(roomId).emit("sv_turn:update", turnUpdated);
     io.in(roomId).emit("sv_players:update", playersUpdated);
@@ -87,7 +91,11 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
       ),
     } as TTurn;
 
-    global.setRoomState(roomId, { players, turn: turnUpdated });
+    global.setRoomState(roomId, {
+      ...global.getRoomState(roomId),
+      players,
+      turn: turnUpdated,
+    });
 
     io.in(roomId).emit("sv_turn:update", turnUpdated);
   };

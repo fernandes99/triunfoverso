@@ -1,7 +1,7 @@
 import { config } from '@/config/general';
 import { MOUNTH_IN_SECOND } from '@/constants/timers';
-import { TGetAllResultDecks } from '@/types/deck';
 import getQueryAllDecks from '@/utils/graphql/gqlDecks';
+import { TDeck, TGetAllResultDecks } from '@shared/types/deck';
 
 export const deckService = {
   getAll: async () => {
@@ -23,7 +23,7 @@ export const deckService = {
       const result = (await response.json()) as TGetAllResultDecks;
       return result.data;
     } catch (error) {
-      return new Error(`Error on cardService.getAll: ${error}`);
+      return new Error(`Error on deckService.getAll: ${error}`);
     }
   },
   getBySlug: async (slug: string) => {
@@ -43,9 +43,19 @@ export const deckService = {
         }
       });
       const result = (await response.json()) as TGetAllResultDecks;
-      return result.data.decks[0];
+      return result.data.decks[0] as TDeck;
     } catch (error) {
-      return new Error(`Error on cardService.getAll: ${error}`);
+      return new Error(`Error on deckService.getBySlug: ${error}`);
     }
+  }
+};
+
+export const fetchDeckBySlug = async (slug: string) => {
+  try {
+    const res = await fetch(`/api/decks/${slug}`);
+    return res.json() as Promise<TDeck>;
+  } catch (e) {
+    console.error('Erro ao buscar o deck', e);
+    return null;
   }
 };

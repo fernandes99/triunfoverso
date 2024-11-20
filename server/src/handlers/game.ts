@@ -1,21 +1,27 @@
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
 
+import { CARDS } from "@/constants/cards";
+import { TDeck } from "@shared/types/deck";
 import { TPlayer } from "@shared/types/player";
 import { TTurn } from "@shared/types/turn";
-import { CARDS } from "../constants/cards";
 import { shuffle } from "../utils/general";
 
-interface IOnStartGame {
+type TOnStartGame = {
   roomId: string;
   playerName: string;
-}
+};
+
+type TOnAddDeck = {
+  roomId: string;
+  deck: TDeck;
+};
 
 export const registerGameHandlers = (io: Server, socket: Socket) => {
   const global = Global.getInstance();
 
-  const onStartGame = ({ roomId, playerName }: IOnStartGame) => {
-    const players = global.getRoomState(roomId).players;
+  const onStartGame = ({ roomId, playerName }: TOnStartGame) => {
+    const { players, deck } = global.getRoomState(roomId);
     const playersUpdated = [
       ...(players.filter((player) => player.id !== socket.id) || []),
       {
@@ -37,7 +43,7 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
     global.setRoomState(roomId, {
       players: playersUpdated,
       turn: turnUpdated,
-      deck: null,
+      deck,
     });
 
     socket.join(roomId);
@@ -47,5 +53,17 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
     io.in(roomId).emit("sv_players:update", playersUpdated);
   };
 
+  const onAddDeck = ({ roomId, deck }: TOnAddDeck) => {
+    const currentDeck = global.getRoomState(roomId).deck;
+
+    if (currentDeck?.id === deck.id) {
+      return null;
+    }
+
+    global.setRoomDeck(roomId, deck);
+    io.in(roomId).emit("sv_deck:update", deck);
+  };
+
   socket.on("cl_game:on-start", onStartGame);
+  socket.on("cl_game:add-deck", onAddDeck);
 };

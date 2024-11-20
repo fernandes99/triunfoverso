@@ -1,23 +1,25 @@
 'use client';
 
 import toast from 'react-hot-toast';
-import Select from 'react-select';
 
 import Button from '@/components/Button';
+import Select, { TSelectOption } from '@/components/Select';
+import { fetchDeckBySlug } from '@/services/deck';
 import useCopyToClipboard from '@/utils/hooks/useClipboard';
+import { getRandomEmoji } from '@/utils/scripts/emoji';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
-import { TGame } from '@shared/types/game';
+import { TDeck } from '@shared/types/deck';
 import { TPlayer } from '@shared/types/player';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { LuArrowLeft, LuCopy } from 'react-icons/lu';
 
-const options = [
-  { value: 'series', label: 'Séries' },
-  { value: 'animes', label: 'Animes' },
-  { value: 'games', label: 'Jogos' }
-];
+const DECK_DEFAULT_OPTIONS = [
+  { id: 'series', value: 'series', label: 'Séries' },
+  { id: 'animes', value: 'animes', label: 'Animes' },
+  { id: 'games', value: 'games', label: 'Jogos' }
+] as TSelectOption[];
 
 interface WelcomeContentProps {
   roomId: string;
@@ -25,8 +27,12 @@ interface WelcomeContentProps {
 
 export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
   const router = useRouter();
+  const [deckOptions, setDeckOptions] = useState(DECK_DEFAULT_OPTIONS);
+  const [deckOptionSelected, setDeckOptionSelected] = useState<TSelectOption>(
+    DECK_DEFAULT_OPTIONS[0]
+  );
   const [connectedPlayers, setConnectedPlayers] = useState<TPlayer[]>([]);
-  const [game, setGame] = useState<Nullable<TGame>>(null);
+  const [deck, setDeck] = useState<Nullable<TDeck>>(null);
   const [isReady, setIsReady] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard('', 3000);
 
@@ -51,21 +57,54 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
     setIsReady((prev) => !prev);
   };
 
+  const handleSelectDeckOption = async (option: TSelectOption) => {
+    if (option) {
+      setDeckOptionSelected(option);
+
+      try {
+        const deckSelected = await fetchDeckBySlug(option.value);
+
+        if (!deckSelected) {
+          throw new Error('Deck não encontrado');
+        }
+
+        return setDeck(deckSelected);
+      } catch (e) {
+        return toast.error(`${getRandomEmoji()} Que pena, não foi possível buscar o deck`);
+      }
+    }
+  };
+
   useMemo(() => {
     if (connectedPlayers.length > 1 && connectedPlayers.every((player) => player.isReady)) {
       router.push(`/rooms/${roomId}/in-game`);
     }
   }, [connectedPlayers, router, roomId]);
 
+  console.log('deck', deck);
+
+  useMemo(() => {
+    if (deck) {
+      socket.emit('cl_game:add-deck', {
+        roomId,
+        deck
+      });
+    }
+  }, [deck]);
+
   useEffect(() => {
     const onConnected = () => console.log('Connected');
     const onDisconnected = () => console.log('Disconnected');
     const onUpdatePlayer = setConnectedPlayers;
-    const onUpdateGame = setGame;
+    const onUpdateDeck = (deck: TDeck) => {
+      setDeck(deck);
+      setDeckOptionSelected(deckOptions.find((d) => d.id === deck.slug)!);
+    };
 
     socket.on('connect', onConnected);
     socket.on('disconnect', onDisconnected);
     socket.on('sv_players:update', onUpdatePlayer);
+    socket.on('sv_deck:update', onUpdateDeck);
 
     socket.emit('cl_room:connect', {
       roomId,
@@ -76,7 +115,6 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
       socket.off('connect', onConnected);
       socket.off('disconnect', onDisconnected);
       socket.off('sv_players:update', onUpdatePlayer);
-      socket.off('sv_game:get-deck', onUpdateGame);
     };
   }, [roomId]);
 
@@ -84,6 +122,7 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
     <div className='container mx-auto flex h-screen items-center justify-center'>
       <div className='flex flex-col rounded-xl bg-white p-12'>
         <button
+          type='button'
           onClick={goToHome}
           className='-ml-2 -mt-4 mb-1 flex w-fit items-center gap-1 rounded-md px-2 py-1 text-sm text-neutral-500 transition-all hover:bg-neutral-100 hover:text-neutral-700'
         >
@@ -96,18 +135,12 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
             <span className='text-2xl font-bold text-primary-500'>Verso</span>
           </div>
           <div className='flex flex-col text-sm'>
-            <span className='z-10 -mb-2 ml-1 w-fit rounded-sm bg-white px-1 text-xs font-medium text-neutral-500'>
-              Tema:
-            </span>
             <Select
-              value={options[0]}
-              options={options}
-              placeholder='Temas'
-              classNames={{
-                control: () => '!min-h-[32px] !cursor-pointer',
-                valueContainer: () => 'h-[32px]',
-                indicatorsContainer: () => 'h-[32px]'
-              }}
+              label='Deck'
+              value={deckOptionSelected}
+              options={deckOptions}
+              onChange={handleSelectDeckOption}
+              className='w-32'
             />
           </div>
         </div>

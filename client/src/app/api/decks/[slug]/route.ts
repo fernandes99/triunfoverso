@@ -6,7 +6,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     const responseData = await deckService.getBySlug(slug);
     return Response.json(responseData);
   } catch (error) {
-    return new Response(`Error on get deck: ${error}`, {
+    console.error(`Error on route api/decks/[slug]: ${error}`);
+    return new Response(`Error on route api/decks/[slug]: ${error}`, {
       status: 500
     });
   }

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import RoomContent from './content';
 
 type TParams = Promise<{ id: string }>;
@@ -11,7 +12,9 @@ export default async function RoomPage({ params }: Readonly<RoomPageProps>) {
 
   return (
     <main className='max-w-[2560px]'>
-      <RoomContent roomId={id} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <RoomContent roomId={id} />
+      </Suspense>
     </main>
   );
 }

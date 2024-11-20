@@ -1,3 +1,4 @@
+import { TDeck } from "@shared/types/deck";
 import { TPlayer } from "@shared/types/player";
 import { TGlobal, TRoom, TRoomId } from "../types/global";
 
@@ -38,6 +39,10 @@ export class Global {
 
   public updateRoomPlayers(roomId: TRoomId, playerListState: TRoom["players"]) {
     this.state.rooms[roomId].players = playerListState;
+  }
+
+  public setRoomDeck(roomId: TRoomId, deck: TDeck) {
+    this.state.rooms[roomId].deck = deck;
   }
 
   public updateRoomReadyPlayer(
