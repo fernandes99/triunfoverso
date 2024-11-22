@@ -30,6 +30,8 @@ export class Global {
       };
     }
 
+    console.log(`Room State ${roomId}`, this.state.rooms[roomId]);
+
     return this.state.rooms[roomId];
   }
 

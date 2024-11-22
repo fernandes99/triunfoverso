@@ -73,7 +73,11 @@ export const registerTurnHandlers = (io: Server, socket: Socket) => {
     const finishedGame = winner?.cards?.length && winner?.cards?.length <= 1;
 
     if (finishedGame && socket.id === winner.id) {
-      io.to(socket.id).emit("game:you-win");
+      io.to(socket.id).emit("sv_game:you-win");
+    }
+
+    if (finishedGame && socket.id === loser?.id) {
+      io.to(socket.id).emit("sv_game:you-lose");
     }
 
     const turnUpdated = {

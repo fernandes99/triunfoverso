@@ -79,7 +79,6 @@ export const Card = ({ card, turn, onSelectAttribute, disableActions = true }: C
           placeholder='blur'
           width={380}
           height={320}
-          objectFit='fill'
           quality={100}
           alt='Dr House'
           className='h-full w-full object-cover opacity-10 blur-md grayscale'
@@ -104,7 +103,6 @@ export const Card = ({ card, turn, onSelectAttribute, disableActions = true }: C
                   placeholder='blur'
                   width={380}
                   height={320}
-                  objectFit='fill'
                   quality={100}
                   alt={card.title}
                   className='h-80 object-cover opacity-75'

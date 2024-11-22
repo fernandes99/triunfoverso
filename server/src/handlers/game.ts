@@ -1,11 +1,10 @@
 import { Server, Socket } from "socket.io";
 import { Global } from "../store/global";
 
-import { CARDS } from "@/constants/cards";
+import { shuffle } from "@/utils/general";
 import { TDeck } from "@shared/types/deck";
 import { TPlayer } from "@shared/types/player";
 import { TTurn } from "@shared/types/turn";
-import { shuffle } from "../utils/general";
 
 type TOnStartGame = {
   roomId: string;
@@ -28,7 +27,7 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
         id: socket.id,
         name: playerName,
         isReady: true,
-        cards: shuffle([...CARDS]),
+        cards: shuffle([...deck!.cards]),
         roomId,
       } as TPlayer,
     ];

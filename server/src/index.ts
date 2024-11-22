@@ -40,13 +40,21 @@ const onConnection = (socket: Socket) => {
       global.getRoomState(roomId).players
     );
   });
+
+  socket.onAny((eventName) => {
+    console.log("Event received:", eventName);
+  });
+
+  socket.onAnyOutgoing((eventName) => {
+    console.log("Event sent:", eventName);
+  });
 };
 
 io.on("connection", onConnection);
 
 app.get("/", (_, res) => {
   console.log('Acesso à rota "/"');
-  res.send("Olá, mundo!");
+  res.send("OláHGe, mundo!");
 });
 
 server.listen(port, () => {

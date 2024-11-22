@@ -49,7 +49,7 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
   const handleReadyPlayer = () => {
     if (connectedPlayers?.length < 2 && !isReady) {
       toast('É necessário 2 jogadores ou mais para iniciar', {
-        icon: '🥲'
+        icon: getRandomEmoji()
       });
     }
 
@@ -58,30 +58,20 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
   };
 
   const handleSelectDeckOption = async (option: TSelectOption) => {
-    if (option) {
-      setDeckOptionSelected(option);
+    setDeckOptionSelected(option);
 
-      try {
-        const deckSelected = await fetchDeckBySlug(option.value);
+    try {
+      const deckSelected = await fetchDeckBySlug(option.value);
 
-        if (!deckSelected) {
-          throw new Error('Deck não encontrado');
-        }
-
-        return setDeck(deckSelected);
-      } catch (e) {
-        return toast.error(`${getRandomEmoji()} Que pena, não foi possível buscar o deck`);
+      if (!deckSelected) {
+        throw new Error('Deck não encontrado');
       }
+
+      return setDeck(deckSelected);
+    } catch (e) {
+      return toast.error(`${getRandomEmoji()} Que pena, não foi possível buscar o deck`);
     }
   };
-
-  useMemo(() => {
-    if (connectedPlayers.length > 1 && connectedPlayers.every((player) => player.isReady)) {
-      router.push(`/rooms/${roomId}/in-game`);
-    }
-  }, [connectedPlayers, router, roomId]);
-
-  console.log('deck', deck);
 
   useMemo(() => {
     if (deck) {
@@ -91,6 +81,16 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
       });
     }
   }, [deck]);
+
+  useEffect(() => {
+    if (connectedPlayers.length > 1 && connectedPlayers.every((player) => player.isReady)) {
+      router.push(`/rooms/${roomId}/in-game`);
+    }
+  }, [connectedPlayers, router, roomId]);
+
+  useEffect(() => {
+    handleSelectDeckOption(deckOptionSelected);
+  }, [deckOptionSelected]);
 
   useEffect(() => {
     const onConnected = () => console.log('Connected');
@@ -139,7 +139,7 @@ export default function RoomContent({ roomId }: Readonly<WelcomeContentProps>) {
               label='Deck'
               value={deckOptionSelected}
               options={deckOptions}
-              onChange={handleSelectDeckOption}
+              onChange={setDeckOptionSelected}
               className='w-32'
             />
           </div>

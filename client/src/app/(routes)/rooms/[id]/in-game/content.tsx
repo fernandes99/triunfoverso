@@ -8,7 +8,6 @@ import { RESET_TURN_TIMEOUT } from '@/constants/timers';
 import storage from '@/utils/scripts/storage';
 import { socket } from '@/utils/socket';
 import { TCardAttribute } from '@shared/types/card';
-import { TGame } from '@shared/types/game';
 import { TPlayer } from '@shared/types/player';
 import { TTurn } from '@shared/types/turn';
 import { Card } from './components/Card';
@@ -21,7 +20,6 @@ interface InGameContentProps {
 export default function InGameContent({ roomId }: Readonly<InGameContentProps>) {
   const [players, setPlayers] = useState<TPlayer[]>([]);
   const [turn, setTurn] = useState<Nullable<TTurn>>(null);
-  const [game, setGame] = useState<Nullable<TGame>>(null);
 
   const selfPlayer = players.find((player) => player.id === socket.id);
   const isSelfTurn = turn?.currentPlayer.id === selfPlayer?.id;
@@ -42,8 +40,8 @@ export default function InGameContent({ roomId }: Readonly<InGameContentProps>) 
 
     socket.on('sv_players:update', onUpdatePlayer);
     socket.on('sv_turn:update', onUpdateTurn);
-    socket.on('game:you-lose', onYouLose);
-    socket.on('game:you-win', onYouWin);
+    socket.on('sv_game:you-lose', onYouLose);
+    socket.on('sv_game:you-win', onYouWin);
 
     socket.emit('cl_game:on-start', {
       roomId,
@@ -53,8 +51,8 @@ export default function InGameContent({ roomId }: Readonly<InGameContentProps>) 
     return () => {
       socket.off('sv_players:update', onUpdatePlayer);
       socket.off('sv_turn:update', onUpdateTurn);
-      socket.off('game:you-lose', onYouLose);
-      socket.off('game:you-win', onYouWin);
+      socket.off('sv_game:you-lose', onYouLose);
+      socket.off('sv_game:you-win', onYouWin);
     };
   }, [roomId]);
 

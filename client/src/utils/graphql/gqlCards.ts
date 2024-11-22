@@ -7,12 +7,14 @@ export const gqlCards = `
         url
         width
         height
+        blurhash
     }
     logo {
         alt
         url
         width
         height
+        blurhash
     }
     attrs {
         id
