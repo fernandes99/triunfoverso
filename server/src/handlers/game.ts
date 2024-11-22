@@ -27,7 +27,7 @@ export const registerGameHandlers = (io: Server, socket: Socket) => {
         id: socket.id,
         name: playerName,
         isReady: true,
-        cards: shuffle([...deck!.cards]),
+        cards: deck?.cards ? shuffle([...deck.cards]) : [],
         roomId,
       } as TPlayer,
     ];
